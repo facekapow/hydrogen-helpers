@@ -1,0 +1,14 @@
+{
+  "name": "hydrogen-helpers",
+  "version": "1.0.0",
+  "description": "HydrogenIDE's helper module.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No test\""
+  },
+  "author": "facekapow",
+  "license": "MIT",
+  "dependencies": {
+    "mustache": "^2.2.1"
+  }
+}
