@@ -212,6 +212,6 @@ class BrowserWindow extends EventEmitter {
 
 module.exports = {
   ApplicationWrapper: ApplicationWrapper,
-  ApplicationWebInterface: ApplicationWebInterface,
+  ApplicationInterface: ApplicationInterface,
   BrowserWindow: BrowserWindow
 }
