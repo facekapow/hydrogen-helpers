@@ -52,7 +52,8 @@ class ApplicationWrapper extends EventEmitter {
     }
     this._internalApp = electronApp || electron.app;
     this.viewDir = 'views';
-    this.web = new ApplicationWebInterface(this);
+    this.web = new ApplicationInterface(this, 0);
+    this.main = new ApplicationInterface(this, 1);
     this.currentWindow = null;
     pipeEvents(this, this._internalApp);
     if (!appDir) throw new Error('Where\'s the app located? appDir not provided.');
@@ -133,17 +134,20 @@ class ApplicationWrapper extends EventEmitter {
   }
 }
 
-class ApplicationWebInterface extends EventEmitter {
-  constructor(appWrapper) {
+class ApplicationInterface extends EventEmitter {
+  constructor(appWrapper, type) {
     super();
     this._app = appWrapper;
-    this._funcs = {
-      alert: (txt) => {
+    this._type = type || 0;
+    this._funcs = {};
+    if (this._type === 0) {
+      // web
+      this._funcs.alert = (txt) => {
         if (this._app.currentWindow) {
           this._app.currentWindow.webContents.executeJavaScript(`alert(${util.inspect(txt)})`);
         }
       }
-    };
+    }
     this.__appendFunctions = () => {
       for (var name in this._funcs) {
         (name => {
