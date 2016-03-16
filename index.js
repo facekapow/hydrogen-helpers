@@ -37,13 +37,13 @@ function mirror(ctx, obj, arr) {
   }
 }
 
-function pipeEvents(ctx, obj) {
+/*function pipeEvents(ctx, obj) {
   const oldEmit = obj.emit.bind(obj);
   obj.emit = (...args) => {
     ctx.emit(...args);
     oldEmit(...args);
   }
-}
+}*/
 
 class ApplicationWrapper extends EventEmitter {
   constructor(electronApp, appDir) {
@@ -57,7 +57,6 @@ class ApplicationWrapper extends EventEmitter {
     this.web = new ApplicationInterface(this, 0);
     this.main = new ApplicationInterface(this, 1);
     this.currentWindow = null;
-    pipeEvents(this, this._internalApp);
     if (!appDir) throw new Error('Where\'s the app located? appDir not provided (usually just use __dirname).');
     this._dir = appDir;
     try {
@@ -176,7 +175,6 @@ class BrowserWindow extends EventEmitter {
     this.currentView = {
       path: ''
     }
-    pipeEvents(this, this._window);
     transparentize(this, this._window);
     mirror(this, this._window, ['webContents']);
     this._intercepted = {};
