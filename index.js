@@ -12,8 +12,10 @@ const electron = require('electron');
 const defaultsMenuActions = require('./menu/defaultsMenuActions');
 const helpers = require('./helpers');
 
-function transparentize(ctx, obj, arr) {
+function transparentize(ctx, obj) {
+  var arr = Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
   for (var func of arr) {
+    if (func === 'constructor') continue;
     (func => {
       ctx[func] = (...args) => {
         obj[func](...args);
@@ -56,7 +58,7 @@ class ApplicationWrapper extends EventEmitter {
     this.main = new ApplicationInterface(this, 1);
     this.currentWindow = null;
     pipeEvents(this, this._internalApp);
-    if (!appDir) throw new Error('Where\'s the app located? appDir not provided.');
+    if (!appDir) throw new Error('Where\'s the app located? appDir not provided (usually just use __dirname).');
     this._dir = appDir;
     try {
       this._appCfg = JSON.parse(String(fs.readFileSync(`${this._dir}/app.json`)));
@@ -70,7 +72,7 @@ class ApplicationWrapper extends EventEmitter {
     } finally {
       this._menuDefaults = JSON.parse(mustache.render(String(fs.readFileSync(`${__dirname}/menu/menuDefaults.json`)), this._appCfg));
     }
-    transparentize(this, this._internalApp, ['quit']);
+    transparentize(this, this._internalApp);
     this.loadMenu = (menuJSON, menuCommands) => {
       if (!menuJSON) menuJSON = `${__dirname}/menu/defaultMenu.json`;
       if (!menuCommands) menuCommands = `${__dirname}/menu/defaultsMenuActions`;
@@ -175,7 +177,7 @@ class BrowserWindow extends EventEmitter {
       path: ''
     }
     pipeEvents(this, this._window);
-    transparentize(this, this._window, ['setFullScreen', 'loadURL', 'isFullScreen', 'toggleDevTools']);
+    transparentize(this, this._window);
     mirror(this, this._window, ['webContents']);
     this._intercepted = {};
     electron.protocol.interceptBufferProtocol('file', (req, cb) => {
