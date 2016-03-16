@@ -14,11 +14,8 @@ const helpers = require('./helpers');
 
 function transparentize(ctx, obj, arr) {
   for (var func of arr) {
-    if (func === 'constructor') continue;
     (func => {
-      ctx[func] = (...args) => {
-        obj[func](...args);
-      }
+      ctx[func] = (...args) => obj[func](...args);
     })(func);
   }
 }
