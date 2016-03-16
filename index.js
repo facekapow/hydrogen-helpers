@@ -12,8 +12,7 @@ const electron = require('electron');
 const defaultsMenuActions = require('./menu/defaultsMenuActions');
 const helpers = require('./helpers');
 
-function transparentize(ctx, obj) {
-  var arr = Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
+function transparentize(ctx, obj, arr) {
   for (var func of arr) {
     if (func === 'constructor') continue;
     (func => {
@@ -72,7 +71,7 @@ class ApplicationWrapper extends EventEmitter {
     } finally {
       this._menuDefaults = JSON.parse(mustache.render(String(fs.readFileSync(`${__dirname}/menu/menuDefaults.json`)), this._appCfg));
     }
-    transparentize(this, this._internalApp);
+    transparentize(this, this._internalApp, ['quit', 'getPath']);
     this.loadMenu = (menuJSON, menuCommands) => {
       if (!menuJSON) menuJSON = `${__dirname}/menu/defaultMenu.json`;
       if (!menuCommands) menuCommands = `${__dirname}/menu/defaultsMenuActions`;
@@ -177,7 +176,7 @@ class BrowserWindow extends EventEmitter {
       path: ''
     }
     pipeEvents(this, this._window);
-    transparentize(this, this._window);
+    transparentize(this, this._window, ['setFullScreen', 'loadURL', 'isFullScreen', 'toggleDevTools']);
     mirror(this, this._window, ['webContents']);
     this._intercepted = {};
     electron.protocol.interceptBufferProtocol('file', (req, cb) => {
