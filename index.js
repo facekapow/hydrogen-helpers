@@ -52,6 +52,7 @@ class ApplicationWrapper extends EventEmitter {
     this.viewDir = 'views';
     this.web = new ApplicationInterface(this, 0);
     this.main = new ApplicationInterface(this, 1);
+    this.events = new EventEmitter();
     this.currentWindow = null;
     pipeEvents(this, this._internalApp);
     if (!appDir) throw new Error('Where\'s the app located? appDir not provided (usually just use __dirname).');
