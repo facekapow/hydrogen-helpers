@@ -1,3 +1,3 @@
 'use strict';
 
-window.app = require('remote').getGlobal('app');
+window.app = require('electron').remote.getGlobal('app');
