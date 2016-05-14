@@ -181,7 +181,7 @@ class BrowserWindow extends EventEmitter {
       if (this._intercepted[req.url]) {
         cb(new Buffer(this._intercepted[req.url]));
       } else {
-        cb(fs.readFileSync(url.parse(req.url).path));
+        cb(fs.readFileSync(decodeURI(url.parse(req.url).path)));
       }
     }, (err) => {
       if (err) throw err;
