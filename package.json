@@ -1,6 +1,6 @@
 {
   "name": "hydrogen-helpers",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "HydrogenIDE's helper module.",
   "main": "index.js",
   "scripts": {
